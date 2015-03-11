@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html ng-app="bab1">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Insert Multiple Data</title>
+    <script src="angular.min.js"></script>
+</head>
+<body ng-controller="MainController">
+{{ data }}
+<div ng-repeat="key in data">
+    Nama <input type="text" ng-model="data[$index].nama" /><br />
+    Kelas <input type="text" ng-model="data[$index].kelas" /><br />
+</div>
+
+<button ng-click="tambah()">Tambah Data</button>
+<button ng-click="cancel()">Cancel</button>
+<button ng-click="simpan()">Simpan</button>
+<p>{{ pesan }}</p>
+<script>
+    var app = angular.module('bab1', []);
+    app.controller('MainController', function($scope, $http){
+        $scope.data=[{nama : '', kelas : ''}];
+        $scope.tambah = function(){
+            $scope.data.push({nama : '', kelas : ''});
+        };
+        $scope.cancel = function () {
+            $scope.data.splice($scope.data.length - 1);
+        };
+        $scope.simpan = function(){
+            $http.post('http://localhost/buku/bab1/server.php?action=insert', $scope.data).success( function(response){
+                if(response >0 ){
+                    $scope.data = [{nama: '', kelas : ''}];
+                    $scope.pesan = response + ' Data telah berhasil disimpan';
+                    $scope.$apply();
+                }
+            });
+        }
+    });
+</script>
+</body>
+
+</html>
